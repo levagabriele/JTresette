@@ -160,6 +160,7 @@ public class GameController {
     /** Gioca una mano completa. */
     private void giocaMano() throws InterruptedException {
         partita.iniziaMano();
+        AudioManager.getInstance().play(SoundEffect.CARD_DEAL);
 
         // Aggiorna UI con le carte distribuite
         aggiornaUI();

@@ -1,6 +1,7 @@
 package it.uniroma1.mdp.jtresette.view.components;
 
 import java.awt.*;
+import java.util.stream.IntStream;
 
 import javax.swing.*;
 
@@ -64,14 +65,21 @@ public class ScorePanel extends JPanel {
 
         if (nomiGiocatori == null || punteggi == null) return;
 
-        // Punteggi giocatori
-        int y = 80;
-        for (int i = 0; i < nomiGiocatori.length; i++) {
-            g2d.setFont(Constants.SCORE_FONT);
-            g2d.setColor(i == 0 ? Constants.GOLD : Constants.TEXT_WHITE);
-            g2d.drawString(nomiGiocatori[i], 15, y);
+        // Ordina indici per punteggio decrescente (Stream)
+        int[] ordinati = IntStream.range(0, nomiGiocatori.length)
+                .boxed()
+                .sorted((a, b) -> Integer.compare(punteggi[b], punteggi[a]))
+                .mapToInt(Integer::intValue)
+                .toArray();
 
-            String puntiStr = RegoleTresette.formattaPunti(punteggi[i]);
+        // Punteggi giocatori (ordinati per punteggio)
+        int y = 80;
+        for (int idx : ordinati) {
+            g2d.setFont(Constants.SCORE_FONT);
+            g2d.setColor(idx == 0 ? Constants.GOLD : Constants.TEXT_WHITE);
+            g2d.drawString(nomiGiocatori[idx], 15, y);
+
+            String puntiStr = RegoleTresette.formattaPunti(punteggi[idx]);
             FontMetrics fm = g2d.getFontMetrics();
             g2d.drawString(puntiStr, getWidth() - 15 - fm.stringWidth(puntiStr), y);
 
@@ -79,8 +87,8 @@ public class ScorePanel extends JPanel {
             y += 5;
             g2d.setColor(new Color(50, 50, 50));
             g2d.fillRoundRect(15, y, getWidth() - 30, 8, 4, 4);
-            float progresso = Math.min(1f, (float) punteggi[i] / obiettivoTerzi);
-            g2d.setColor(i == 0 ? Constants.GOLD : new Color(100, 150, 255));
+            float progresso = Math.min(1f, (float) punteggi[idx] / obiettivoTerzi);
+            g2d.setColor(idx == 0 ? Constants.GOLD : new Color(100, 150, 255));
             g2d.fillRoundRect(15, y, (int) ((getWidth() - 30) * progresso), 8, 4, 4);
 
             y += 25;
