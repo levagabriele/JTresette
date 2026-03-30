@@ -196,7 +196,9 @@ public class GameController {
 
             // Chiudi turno
             int vincitoreTurno = partita.chiudiTurno();
-            AudioManager.getInstance().play(SoundEffect.TRICK_WIN);
+            if (vincitoreTurno == 0) {
+                AudioManager.getInstance().play(SoundEffect.TRICK_WIN);
+            }
             Thread.sleep(Constants.TRICK_COLLECT_DELAY_MS);
         }
     }
