@@ -1,0 +1,11 @@
+{
+  "nickname": "Gabriele",
+  "avatarPath": "avatars/avatar_01.png",
+  "statistiche": {
+    "partiteGiocate": 0,
+    "partiteVinte": 0,
+    "partitePerse": 0,
+    "puntiTotaliSegnati": 0
+  },
+  "livello": 1
+}

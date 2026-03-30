@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(xargs javac:*)",
+      "Bash(rm \"/c/Users/Leva Gabriele/Desktop/Uni/JTresette/src/Main.java\")",
+      "Bash(timeout 8 java -cp out it.uniroma1.mdp.jtresette.JTresette)"
+    ]
+  }
+}
