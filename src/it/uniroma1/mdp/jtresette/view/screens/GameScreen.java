@@ -13,6 +13,7 @@ import it.uniroma1.mdp.jtresette.model.game.GamePhase;
 import it.uniroma1.mdp.jtresette.util.Constants;
 import it.uniroma1.mdp.jtresette.view.components.HandPanel;
 import it.uniroma1.mdp.jtresette.view.components.ScorePanel;
+import it.uniroma1.mdp.jtresette.view.components.StyledButton;
 import it.uniroma1.mdp.jtresette.view.components.TavoloPanel;
 
 /**
@@ -29,8 +30,8 @@ public class GameScreen extends JPanel implements GameObserver {
     private final ScorePanel scorePanel;
     private final JLabel lblStato;
     private final JLabel lblManoNumero;
-    private final JButton btnAbbandona;
-    private final JButton btnRicomincia;
+    private final StyledButton btnAbbandona;
+    private final StyledButton btnRicomincia;
 
     private String[] nomiGiocatori;
     private Runnable onGameOver;
@@ -60,13 +61,13 @@ public class GameScreen extends JPanel implements GameObserver {
         JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
         btnPanel.setOpaque(false);
 
-        btnRicomincia = creaBottoneTop("Ricomincia");
+        btnRicomincia = StyledButton.piccolo("Ricomincia", new Color(50, 50, 110));
         btnRicomincia.addActionListener(e -> {
             if (onRicomincia != null) onRicomincia.run();
         });
         btnPanel.add(btnRicomincia);
 
-        btnAbbandona = creaBottoneTop("Menu");
+        btnAbbandona = StyledButton.piccolo("Menu", new Color(120, 30, 30));
         btnAbbandona.addActionListener(e -> {
             int scelta = javax.swing.JOptionPane.showConfirmDialog(this,
                     "Vuoi abbandonare la partita?", "Abbandona",
@@ -214,17 +215,4 @@ public class GameScreen extends JPanel implements GameObserver {
     public void setOnGameOver(Runnable callback) { this.onGameOver = callback; }
     public void setOnAbbandona(Runnable callback) { this.onAbbandona = callback; }
     public void setOnRicomincia(Runnable callback) { this.onRicomincia = callback; }
-
-    private JButton creaBottoneTop(String testo) {
-        JButton btn = new JButton(testo);
-        btn.setFont(new java.awt.Font("SansSerif", java.awt.Font.BOLD, 12));
-        btn.setFocusPainted(false);
-        btn.setBackground(new java.awt.Color(80, 30, 30));
-        btn.setForeground(Constants.TEXT_WHITE);
-        btn.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Constants.GOLD, 1),
-                BorderFactory.createEmptyBorder(4, 10, 4, 10)));
-        btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        return btn;
-    }
 }

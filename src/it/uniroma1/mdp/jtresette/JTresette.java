@@ -13,9 +13,9 @@ import it.uniroma1.mdp.jtresette.view.MainFrame;
 public class JTresette {
 
     public static void main(String[] args) {
-        // Imposta look and feel nativo
+        // Usa cross-platform L&F per evitare problemi con bottoni custom su Windows
         try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         } catch (Exception e) {
             // Usa il default se non disponibile
         }
