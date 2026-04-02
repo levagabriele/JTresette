@@ -105,6 +105,12 @@ public class GameScreen extends JPanel implements GameObserver {
         scorePanel.setObiettivoTerzi(obiettivoTerzi);
     }
 
+    /** Imposta gli avatar dei giocatori (score panel e tavolo). */
+    public void setAvatars(String[] avatarIds) {
+        scorePanel.setAvatars(avatarIds);
+        tavoloPanel.setAvatars(avatarIds);
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

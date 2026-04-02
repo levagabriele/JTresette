@@ -24,6 +24,7 @@ import it.uniroma1.mdp.jtresette.model.player.GiocatoreAI;
 import it.uniroma1.mdp.jtresette.model.player.GiocatoreUmano;
 import it.uniroma1.mdp.jtresette.util.Constants;
 import it.uniroma1.mdp.jtresette.view.MainFrame;
+import it.uniroma1.mdp.jtresette.view.components.AvatarRenderer;
 import it.uniroma1.mdp.jtresette.view.screens.GameScreen;
 
 /**
@@ -69,6 +70,15 @@ public class GameController {
         gameScreen = new GameScreen();
         String[] nomi = giocatori.stream().map(Giocatore::getNome).toArray(String[]::new);
         gameScreen.inizializza(nomi, numGiocatori, partita.getObiettivoTerzi());
+
+        // Prepara avatar: umano dal profilo, AI con avatar fissi diversi
+        String avatarUmano = ProfileManager.getInstance().getProfilo().getAvatarPath();
+        String[] avatarIds = new String[numGiocatori];
+        avatarIds[0] = avatarUmano;
+        for (int i = 1; i < numGiocatori; i++) {
+            avatarIds[i] = AvatarRenderer.getAvatarId(i + 3); // avatar diversi per gli AI
+        }
+        gameScreen.setAvatars(avatarIds);
 
         // Registra observer: View osserva il Model (MVC + Observer pattern)
         partita.addObserver(gameScreen);

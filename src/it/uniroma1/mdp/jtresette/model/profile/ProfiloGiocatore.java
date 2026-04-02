@@ -10,7 +10,7 @@ public class ProfiloGiocatore {
     private Statistiche statistiche;
 
     public ProfiloGiocatore() {
-        this("Giocatore", "avatars/avatar_01.png", new Statistiche());
+        this("Giocatore", "avatar_01", new Statistiche());
     }
 
     public ProfiloGiocatore(String nickname, String avatarPath, Statistiche statistiche) {

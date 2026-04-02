@@ -65,4 +65,10 @@ public class ProfileManager {
         profilo.setNickname(nickname);
         salva();
     }
+
+    /** Aggiorna l'avatar e salva. */
+    public void aggiornaAvatar(String avatarId) {
+        profilo.setAvatarPath(avatarId);
+        salva();
+    }
 }

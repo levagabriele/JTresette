@@ -34,6 +34,7 @@ public class ProfileController {
         ProfileScreen screen = mainFrame.getProfileScreen();
 
         screen.setNickname(profilo.getNickname());
+        screen.setAvatar(profilo.getAvatarPath());
         screen.setStatistiche(
                 stats.getPartiteGiocate(),
                 stats.getPartiteVinte(),
@@ -43,9 +44,14 @@ public class ProfileController {
     }
 
     private void salvaProfilo() {
-        String nickname = mainFrame.getProfileScreen().getNickname();
+        ProfileScreen screen = mainFrame.getProfileScreen();
+        String nickname = screen.getNickname();
+        String avatarId = screen.getSelectedAvatarId();
+
         if (!nickname.isEmpty()) {
             profileManager.aggiornaNickname(nickname);
         }
+        profileManager.aggiornaAvatar(avatarId);
+        screen.mostraConferma("Profilo salvato!");
     }
 }

@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 
 import it.uniroma1.mdp.jtresette.model.card.Carta;
 import it.uniroma1.mdp.jtresette.util.Constants;
+import it.uniroma1.mdp.jtresette.view.components.AvatarRenderer;
 import it.uniroma1.mdp.jtresette.view.render.CardImageLoader;
 
 /**
@@ -26,6 +27,8 @@ public class TavoloPanel extends JPanel {
     private int[] numCarteInMano;
     private String messaggioTemporaneo;
     private long messaggioScadenza;
+    private BufferedImage[] avatarImages;
+    private static final int AVATAR_SIZE = 28;
 
     public TavoloPanel() {
         setOpaque(false);
@@ -53,6 +56,15 @@ public class TavoloPanel extends JPanel {
     /** Pulisce il tavolo (nuovo turno). */
     public void pulisci() {
         carteGiocate.clear();
+        repaint();
+    }
+
+    /** Imposta gli avatar dei giocatori. */
+    public void setAvatars(String[] avatarIds) {
+        avatarImages = new BufferedImage[avatarIds.length];
+        for (int i = 0; i < avatarIds.length; i++) {
+            avatarImages[i] = AvatarRenderer.render(avatarIds[i], AVATAR_SIZE);
+        }
         repaint();
     }
 
@@ -105,12 +117,19 @@ public class TavoloPanel extends JPanel {
         Point[] posCarte = getPosizioniCarteAI(centerX, centerY);
 
         for (int i = 1; i < numGiocatori; i++) {
-            // Nome
+            // Avatar accanto al nome
             g2d.setFont(Constants.SCORE_FONT);
             g2d.setColor(Constants.TEXT_WHITE);
             FontMetrics fm = g2d.getFontMetrics();
-            g2d.drawString(nomiGiocatori[i],
-                    posNomi[i].x - fm.stringWidth(nomiGiocatori[i]) / 2, posNomi[i].y);
+            int nomeW = fm.stringWidth(nomiGiocatori[i]);
+            int totalW = nomeW + (avatarImages != null ? AVATAR_SIZE + 4 : 0);
+            int startX = posNomi[i].x - totalW / 2;
+
+            if (avatarImages != null && i < avatarImages.length && avatarImages[i] != null) {
+                g2d.drawImage(avatarImages[i], startX, posNomi[i].y - AVATAR_SIZE + 4, null);
+                startX += AVATAR_SIZE + 4;
+            }
+            g2d.drawString(nomiGiocatori[i], startX, posNomi[i].y);
 
             // Carte in mano (dorso piccolo)
             if (numCarteInMano != null && numCarteInMano[i] > 0) {

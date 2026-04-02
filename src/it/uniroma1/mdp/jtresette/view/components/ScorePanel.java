@@ -1,6 +1,7 @@
 package it.uniroma1.mdp.jtresette.view.components;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.stream.IntStream;
 
 import javax.swing.*;
@@ -9,18 +10,20 @@ import it.uniroma1.mdp.jtresette.model.card.RegoleTresette;
 import it.uniroma1.mdp.jtresette.util.Constants;
 
 /**
- * Pannello laterale che mostra i punteggi dei giocatori.
+ * Pannello laterale che mostra i punteggi dei giocatori con avatar.
  */
 public class ScorePanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
+    private static final int AVATAR_SIZE = 24;
 
     private String[] nomiGiocatori;
     private int[] punteggi;
     private int obiettivoTerzi = Constants.OBIETTIVO_TERZI_DEFAULT;
+    private BufferedImage[] avatarImages;
 
     public ScorePanel() {
-        setPreferredSize(new Dimension(180, 300));
+        setPreferredSize(new Dimension(210, 300));
         setOpaque(false);
     }
 
@@ -36,6 +39,18 @@ public class ScorePanel extends JPanel {
 
     public void setObiettivoTerzi(int obiettivo) {
         this.obiettivoTerzi = obiettivo;
+    }
+
+    /**
+     * Imposta gli avatar dei giocatori.
+     * @param avatarIds array di ID avatar (es. "avatar_01"), uno per giocatore
+     */
+    public void setAvatars(String[] avatarIds) {
+        avatarImages = new BufferedImage[avatarIds.length];
+        for (int i = 0; i < avatarIds.length; i++) {
+            avatarImages[i] = AvatarRenderer.render(avatarIds[i], AVATAR_SIZE);
+        }
+        repaint();
     }
 
     @Override
@@ -74,24 +89,43 @@ public class ScorePanel extends JPanel {
 
         // Punteggi giocatori (ordinati per punteggio)
         int y = 80;
-        for (int idx : ordinati) {
-            g2d.setFont(Constants.SCORE_FONT);
-            g2d.setColor(idx == 0 ? Constants.GOLD : Constants.TEXT_WHITE);
-            g2d.drawString(nomiGiocatori[idx], 15, y);
+        int textX = (avatarImages != null) ? 15 + AVATAR_SIZE + 6 : 15;
 
-            String puntiStr = RegoleTresette.formattaPunti(punteggi[idx]);
+        for (int idx : ordinati) {
+            Color colore = idx == 0 ? Constants.GOLD : Constants.TEXT_WHITE;
+
+            // Avatar
+            if (avatarImages != null && idx < avatarImages.length && avatarImages[idx] != null) {
+                g2d.drawImage(avatarImages[idx], 15, y - AVATAR_SIZE + 4, null);
+            }
+
+            // Nome (troncato se necessario)
+            g2d.setFont(Constants.SCORE_FONT);
+            g2d.setColor(colore);
             FontMetrics fm = g2d.getFontMetrics();
-            g2d.drawString(puntiStr, getWidth() - 15 - fm.stringWidth(puntiStr), y);
+            String nome = nomiGiocatori[idx];
+            int maxNomeW = getWidth() - textX - 15;
+            while (fm.stringWidth(nome) > maxNomeW && nome.length() > 3) {
+                nome = nome.substring(0, nome.length() - 1);
+            }
+            g2d.drawString(nome, textX, y);
+
+            // Punteggio (sotto il nome, allineato a destra)
+            String puntiStr = RegoleTresette.formattaPunti(punteggi[idx]);
+            g2d.setFont(new Font("SansSerif", Font.PLAIN, 12));
+            fm = g2d.getFontMetrics();
+            g2d.setColor(new Color(colore.getRed(), colore.getGreen(), colore.getBlue(), 200));
+            g2d.drawString(puntiStr, textX, y + fm.getHeight());
 
             // Barra progresso
-            y += 5;
+            int barY = y + fm.getHeight() + 4;
             g2d.setColor(new Color(50, 50, 50));
-            g2d.fillRoundRect(15, y, getWidth() - 30, 8, 4, 4);
+            g2d.fillRoundRect(15, barY, getWidth() - 30, 8, 4, 4);
             float progresso = Math.min(1f, (float) punteggi[idx] / obiettivoTerzi);
             g2d.setColor(idx == 0 ? Constants.GOLD : new Color(100, 150, 255));
-            g2d.fillRoundRect(15, y, (int) ((getWidth() - 30) * progresso), 8, 4, 4);
+            g2d.fillRoundRect(15, barY, (int) ((getWidth() - 30) * progresso), 8, 4, 4);
 
-            y += 25;
+            y += 50;
         }
     }
 }
