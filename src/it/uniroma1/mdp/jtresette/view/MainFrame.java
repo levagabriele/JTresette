@@ -24,14 +24,12 @@ public class MainFrame extends JFrame {
     private GameScreen gameScreen;
     private ProfileScreen profileScreen;
     private GameOverScreen gameOverScreen;
-
     public MainFrame() {
         super("JTresette");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setSize(Constants.WINDOW_SIZE);
         setMinimumSize(Constants.WINDOW_SIZE);
         setLocationRelativeTo(null);
-        setResizable(false);
 
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
@@ -50,6 +48,7 @@ public class MainFrame extends JFrame {
 
         add(mainPanel);
         mostraSchermata(Constants.SCREEN_MENU);
+
     }
 
     /** Mostra una schermata dato il suo nome. */

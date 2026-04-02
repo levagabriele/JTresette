@@ -54,8 +54,7 @@ public final class Constants {
     // Risorse
     public static final String RESOURCES_PATH = "resources/";
     public static final String CARDS_PATH = RESOURCES_PATH + "images/cards/";
-    public static final String AVATARS_PATH = RESOURCES_PATH + "images/avatars/";
-    public static final String AUDIO_PATH = RESOURCES_PATH + "audio/";
+public static final String AUDIO_PATH = RESOURCES_PATH + "audio/";
     public static final String PROFILE_PATH = RESOURCES_PATH + "data/profile.json";
     public static final String CARD_BACK_PATH = CARDS_PATH + "dorso.png";
 
