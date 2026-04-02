@@ -30,7 +30,7 @@ public class HandPanel extends JPanel {
 
     public HandPanel() {
         setOpaque(false);
-        setPreferredSize(new Dimension(Constants.WINDOW_WIDTH, Constants.CARD_HEIGHT + 40));
+        setPreferredSize(new Dimension(0, Constants.CARD_HEIGHT + 40));
 
         addMouseMotionListener(new MouseAdapter() {
             @Override

@@ -73,6 +73,9 @@ public class TavoloPanel extends JPanel {
         this.messaggioTemporaneo = msg;
         this.messaggioScadenza = System.currentTimeMillis() + durataMs;
         repaint();
+        javax.swing.Timer timer = new javax.swing.Timer(durataMs, e -> repaint());
+        timer.setRepeats(false);
+        timer.start();
     }
 
     @Override
@@ -81,15 +84,22 @@ public class TavoloPanel extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        int centerX = getWidth() / 2;
-        int centerY = getHeight() / 2;
+        int w = getWidth();
+        int h = getHeight();
+        int centerX = w / 2;
+        int centerY = h / 2;
 
-        // Disegna sfondo tavolo (ovale verde)
-        g2d.setColor(Constants.TABLE_GREEN);
-        g2d.fillOval(centerX - 250, centerY - 180, 500, 360);
-        g2d.setColor(Constants.TABLE_GREEN_DARK);
-        g2d.setStroke(new BasicStroke(3));
-        g2d.drawOval(centerX - 250, centerY - 180, 500, 360);
+        // Illuminazione radiale: centro piu' chiaro, bordi piu' scuri
+        RadialGradientPaint luce = new RadialGradientPaint(
+                centerX, centerY, Math.max(w, h) * 0.55f,
+                new float[]{0f, 0.6f, 1f},
+                new Color[]{
+                        new Color(0, 110, 0),   // centro illuminato
+                        new Color(0, 75, 0),    // transizione
+                        new Color(0, 45, 0)     // bordi scuri
+                });
+        g2d.setPaint(luce);
+        g2d.fillRect(0, 0, w, h);
 
         // Disegna nomi giocatori AI e dorso carte
         disegnaGiocatoriAI(g2d, centerX, centerY);
@@ -165,8 +175,8 @@ public class TavoloPanel extends JPanel {
             Carta carta = entry.getValue();
             BufferedImage img = loader.getImmagine(carta);
             if (img != null && idx < posizioni.length) {
-                int cardW = (int)(Constants.CARD_WIDTH * 0.8);
-                int cardH = (int)(Constants.CARD_HEIGHT * 0.8);
+                int cardW = (int)(Constants.CARD_WIDTH * 0.78);
+                int cardH = (int)(Constants.CARD_HEIGHT * 0.78);
                 g2d.drawImage(img, posizioni[idx].x - cardW / 2,
                         posizioni[idx].y - cardH / 2, cardW, cardH, null);
             }
@@ -193,10 +203,10 @@ public class TavoloPanel extends JPanel {
 
     private Point[] getPosizioniCarteGiocate(int cx, int cy) {
         return new Point[]{
-            new Point(cx, cy + 60),             // 0: umano (basso)
-            new Point(cx - 100, cy),            // 1: sinistra
-            new Point(cx, cy - 60),             // 2: alto
-            new Point(cx + 100, cy)             // 3: destra
+            new Point(cx, cy + 80),             // 0: umano (basso)
+            new Point(cx - 120, cy - 10),       // 1: sinistra
+            new Point(cx, cy - 80),             // 2: alto
+            new Point(cx + 120, cy - 10)        // 3: destra
         };
     }
 }

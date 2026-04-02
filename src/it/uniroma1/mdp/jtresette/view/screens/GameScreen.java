@@ -81,13 +81,37 @@ public class GameScreen extends JPanel implements GameObserver {
         topPanel.add(btnPanel, BorderLayout.EAST);
         add(topPanel, BorderLayout.NORTH);
 
-        // Tavolo (centro)
-        tavoloPanel = new TavoloPanel();
-        add(tavoloPanel, BorderLayout.CENTER);
+        // Pannello centrale: tavolo + separatore + mano (stessa larghezza)
+        JPanel centerPanel = new JPanel(new BorderLayout());
+        centerPanel.setOpaque(false);
 
-        // Mano del giocatore (basso)
+        tavoloPanel = new TavoloPanel();
+        centerPanel.add(tavoloPanel, BorderLayout.CENTER);
+
+        // Separatore sfumato orizzontale
+        JPanel separatore = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2d = (Graphics2D) g;
+                GradientPaint fade = new GradientPaint(
+                        0, 0, new Color(0, 45, 0, 0),
+                        0, getHeight(), new Color(0, 50, 0, 255));
+                g2d.setPaint(fade);
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
+        separatore.setOpaque(false);
+        separatore.setPreferredSize(new Dimension(0, 16));
+
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.setOpaque(false);
+        bottomPanel.add(separatore, BorderLayout.NORTH);
+
         handPanel = new HandPanel();
-        add(handPanel, BorderLayout.SOUTH);
+        bottomPanel.add(handPanel, BorderLayout.CENTER);
+        centerPanel.add(bottomPanel, BorderLayout.SOUTH);
+
+        add(centerPanel, BorderLayout.CENTER);
 
         // Punteggi (destra)
         scorePanel = new ScorePanel();
@@ -114,11 +138,9 @@ public class GameScreen extends JPanel implements GameObserver {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        // Sfondo verde tavolo
         Graphics2D g2d = (Graphics2D) g;
-        GradientPaint gradient = new GradientPaint(0, 0, Constants.TABLE_GREEN_DARK,
-                0, getHeight(), new Color(0, 60, 0));
-        g2d.setPaint(gradient);
+        // Sfondo verde scuro uniforme
+        g2d.setColor(new Color(0, 50, 0));
         g2d.fillRect(0, 0, getWidth(), getHeight());
     }
 
