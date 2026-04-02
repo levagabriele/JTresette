@@ -113,27 +113,63 @@ public class CardImageLoader {
         return img;
     }
 
-    /** Crea un placeholder per il dorso della carta. */
+    /** Crea il dorso della carta con pattern cubico 3D bianco/nero/grigio. */
     private BufferedImage creaPlaceholderDorso() {
-        BufferedImage img = new BufferedImage(150, 250, BufferedImage.TYPE_INT_ARGB);
+        int w = 150, h = 250;
+        BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = img.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        // Sfondo blu scuro
-        g.setColor(new java.awt.Color(25, 25, 100));
-        g.fillRoundRect(0, 0, 150, 250, 15, 15);
+        // Sfondo grigio chiaro con bordi arrotondati
+        g.setColor(new java.awt.Color(200, 200, 200));
+        g.fillRoundRect(0, 0, w, h, 15, 15);
 
-        // Bordo dorato
-        g.setColor(Constants.GOLD);
-        g.drawRoundRect(3, 3, 143, 243, 12, 12);
-        g.drawRoundRect(8, 8, 133, 233, 10, 10);
+        // Clip al rettangolo arrotondato per il pattern
+        g.setClip(new java.awt.geom.RoundRectangle2D.Float(6, 6, w - 12, h - 12, 10, 10));
 
-        // Pattern decorativo al centro
-        g.setColor(Constants.GOLD);
-        g.setFont(new java.awt.Font("Serif", java.awt.Font.BOLD, 28));
-        java.awt.FontMetrics fm = g.getFontMetrics();
-        String text = "JT";
-        g.drawString(text, (150 - fm.stringWidth(text)) / 2, 135);
+        // Pattern cubico isometrico 3D
+        java.awt.Color facciaSx = new java.awt.Color(60, 60, 60);     // scura
+        java.awt.Color facciaDx = new java.awt.Color(140, 140, 140);  // media
+        java.awt.Color facciaTop = new java.awt.Color(200, 200, 200); // chiara
+
+        int cubeW = 16; // larghezza mezzo cubo
+        int cubeH = 10; // altezza mezzo cubo
+
+        for (int row = -2; row < h / cubeH + 2; row++) {
+            for (int col = -2; col < w / cubeW + 2; col++) {
+                int cx = col * cubeW * 2 + (row % 2 == 0 ? 0 : cubeW);
+                int cy = row * cubeH * 3 / 2;
+
+                // Faccia superiore (rombo chiaro)
+                int[] topX = {cx, cx + cubeW, cx, cx - cubeW};
+                int[] topY = {cy - cubeH, cy, cy + cubeH, cy};
+                g.setColor(facciaTop);
+                g.fillPolygon(topX, topY, 4);
+
+                // Faccia sinistra (parallelogramma scuro)
+                int[] sxX = {cx - cubeW, cx, cx, cx - cubeW};
+                int[] sxY = {cy, cy + cubeH, cy + cubeH * 2, cy + cubeH};
+                g.setColor(facciaSx);
+                g.fillPolygon(sxX, sxY, 4);
+
+                // Faccia destra (parallelogramma medio)
+                int[] dxX = {cx + cubeW, cx, cx, cx + cubeW};
+                int[] dxY = {cy, cy + cubeH, cy + cubeH * 2, cy + cubeH};
+                g.setColor(facciaDx);
+                g.fillPolygon(dxX, dxY, 4);
+            }
+        }
+
+        // Rimuovi clip e disegna bordo esterno
+        g.setClip(null);
+
+        // Bordo decorativo grigio
+        g.setColor(new java.awt.Color(160, 160, 160));
+        g.setStroke(new java.awt.BasicStroke(2f));
+        g.drawRoundRect(1, 1, w - 3, h - 3, 15, 15);
+        g.setColor(new java.awt.Color(120, 120, 120));
+        g.setStroke(new java.awt.BasicStroke(1f));
+        g.drawRoundRect(5, 5, w - 11, h - 11, 11, 11);
 
         g.dispose();
         return img;

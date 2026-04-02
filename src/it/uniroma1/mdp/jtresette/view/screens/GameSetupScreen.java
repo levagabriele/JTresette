@@ -33,7 +33,7 @@ public class GameSetupScreen extends JPanel {
         // Titolo
         JLabel titolo = new JLabel("Configura Partita", SwingConstants.CENTER);
         titolo.setFont(new Font("Serif", Font.BOLD, 36));
-        titolo.setForeground(Constants.GOLD);
+        titolo.setForeground(Constants.TEXT_WHITE);
         gbc.gridy = 0;
         gbc.insets = new Insets(0, 0, 30, 0);
         add(titolo, gbc);
@@ -120,14 +120,14 @@ public class GameSetupScreen extends JPanel {
                 // Cerchio radio
                 int size = 16;
                 int y = (getHeight() - size) / 2;
-                g2d.setColor(new Color(60, 60, 100));
+                g2d.setColor(new Color(60, 60, 65));
                 g2d.fillOval(2, y, size, size);
-                g2d.setColor(Constants.GOLD);
+                g2d.setColor(Constants.ACCENT);
                 g2d.setStroke(new BasicStroke(1.5f));
                 g2d.drawOval(2, y, size, size);
 
                 if (isSelected()) {
-                    g2d.setColor(Constants.GOLD);
+                    g2d.setColor(Constants.TEXT_WHITE);
                     g2d.fillOval(6, y + 4, size - 8, size - 8);
                 }
 
@@ -150,8 +150,8 @@ public class GameSetupScreen extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-        GradientPaint bg = new GradientPaint(0, 0, new Color(10, 10, 40),
-                0, getHeight(), new Color(30, 30, 70));
+        GradientPaint bg = new GradientPaint(0, 0, Constants.BG_DARK,
+                0, getHeight(), Constants.BG_LIGHTER);
         g2d.setPaint(bg);
         g2d.fillRect(0, 0, getWidth(), getHeight());
     }

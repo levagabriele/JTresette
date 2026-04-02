@@ -28,7 +28,8 @@ public final class JsonUtil {
                     "partiteGiocate": %d,
                     "partiteVinte": %d,
                     "partitePerse": %d,
-                    "puntiTotaliSegnati": %d
+                    "puntiTotaliSegnati": %d,
+                    "xpTotali": %d
                   },
                   "livello": %d
                 }""",
@@ -38,6 +39,7 @@ public final class JsonUtil {
                 s.getPartiteVinte(),
                 s.getPartitePerse(),
                 s.getPuntiTotaliSegnati(),
+                s.getXpTotali(),
                 profilo.getLivello());
     }
 
@@ -51,9 +53,10 @@ public final class JsonUtil {
         int vinte = estraiIntero(json, "partiteVinte");
         int perse = estraiIntero(json, "partitePerse");
         int punti = estraiIntero(json, "puntiTotaliSegnati");
+        int xp = estraiIntero(json, "xpTotali");
 
         return new ProfiloGiocatore(nickname, avatarPath,
-                new Statistiche(giocate, vinte, perse, punti));
+                new Statistiche(giocate, vinte, perse, punti, xp));
     }
 
     /** Salva JSON su file. */

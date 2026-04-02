@@ -30,7 +30,7 @@ public class MenuScreen extends JPanel {
         // Titolo
         JLabel titolo = new JLabel("JTresette", SwingConstants.CENTER);
         titolo.setFont(new Font("Serif", Font.BOLD, 64));
-        titolo.setForeground(Constants.GOLD);
+        titolo.setForeground(Constants.TEXT_WHITE);
         gbc.gridy = 0;
         gbc.insets = new Insets(0, 0, 5, 0);
         add(titolo, gbc);
@@ -38,7 +38,7 @@ public class MenuScreen extends JPanel {
         // Sottotitolo
         JLabel sottotitolo = new JLabel("Il classico gioco di carte italiano", SwingConstants.CENTER);
         sottotitolo.setFont(new Font("Serif", Font.ITALIC, 18));
-        sottotitolo.setForeground(new Color(180, 180, 200));
+        sottotitolo.setForeground(Constants.TEXT_MUTED);
         gbc.gridy = 1;
         gbc.insets = new Insets(0, 0, 10, 0);
         add(sottotitolo, gbc);
@@ -50,13 +50,13 @@ public class MenuScreen extends JPanel {
                 Graphics2D g2d = (Graphics2D) g;
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 int y = getHeight() / 2;
-                GradientPaint gp = new GradientPaint(0, y, new Color(218, 165, 32, 0),
-                        getWidth() / 2, y, Constants.GOLD);
+                GradientPaint gp = new GradientPaint(0, y, new Color(160, 160, 170, 0),
+                        getWidth() / 2, y, Constants.TEXT_MUTED);
                 g2d.setPaint(gp);
-                g2d.setStroke(new BasicStroke(2));
+                g2d.setStroke(new BasicStroke(1.5f));
                 g2d.drawLine(0, y, getWidth() / 2, y);
-                gp = new GradientPaint(getWidth() / 2, y, Constants.GOLD,
-                        getWidth(), y, new Color(218, 165, 32, 0));
+                gp = new GradientPaint(getWidth() / 2, y, Constants.TEXT_MUTED,
+                        getWidth(), y, new Color(160, 160, 170, 0));
                 g2d.setPaint(gp);
                 g2d.drawLine(getWidth() / 2, y, getWidth(), y);
             }
@@ -74,7 +74,7 @@ public class MenuScreen extends JPanel {
         gbc.gridy = 3;
         add(btnNuovaPartita, gbc);
 
-        btnProfilo = new StyledButton("Profilo");
+        btnProfilo = new StyledButton("Profilo", new Color(50, 60, 85));
         gbc.gridy = 4;
         add(btnProfilo, gbc);
 
@@ -95,24 +95,22 @@ public class MenuScreen extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
         int w = getWidth();
         int h = getHeight();
 
-        // Gradiente sfondo scuro
-        GradientPaint bg = new GradientPaint(0, 0, new Color(10, 10, 40),
-                0, h, new Color(30, 30, 70));
+        // Sfondo base
+        GradientPaint bg = new GradientPaint(0, 0, Constants.BG_DARK,
+                0, h, Constants.BG_LIGHTER);
         g2d.setPaint(bg);
         g2d.fillRect(0, 0, w, h);
 
-        // Cerchi decorativi sfumati (effetto bokeh)
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.04f));
-        g2d.setColor(Constants.GOLD);
-        g2d.fillOval(w / 2 - 300, h / 2 - 300, 600, 600);
-        g2d.fillOval(-100, h - 200, 400, 400);
-        g2d.fillOval(w - 200, -100, 300, 300);
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+        // Vignettatura radiale: centro leggermente piu' chiaro
+        RadialGradientPaint vignette = new RadialGradientPaint(
+                w / 2f, h / 2f - 40, Math.max(w, h) * 0.6f,
+                new float[]{0f, 1f},
+                new Color[]{new Color(255, 255, 255, 12), new Color(0, 0, 0, 40)});
+        g2d.setPaint(vignette);
+        g2d.fillRect(0, 0, w, h);
     }
 
     public void addNuovaPartitaListener(ActionListener l) { btnNuovaPartita.addActionListener(l); }

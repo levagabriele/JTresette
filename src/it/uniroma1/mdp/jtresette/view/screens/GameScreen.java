@@ -49,7 +49,7 @@ public class GameScreen extends JPanel implements GameObserver {
 
         lblManoNumero = new JLabel("Mano: 1");
         lblManoNumero.setFont(Constants.SCORE_FONT);
-        lblManoNumero.setForeground(Constants.GOLD);
+        lblManoNumero.setForeground(Constants.TEXT_WHITE);
         topPanel.add(lblManoNumero, BorderLayout.WEST);
 
         lblStato = new JLabel("In attesa...", SwingConstants.CENTER);
@@ -61,13 +61,13 @@ public class GameScreen extends JPanel implements GameObserver {
         JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
         btnPanel.setOpaque(false);
 
-        btnRicomincia = StyledButton.piccolo("Ricomincia", new Color(50, 50, 110));
+        btnRicomincia = StyledButton.piccolo("Ricomincia", Constants.BTN_DEFAULT);
         btnRicomincia.addActionListener(e -> {
             if (onRicomincia != null) onRicomincia.run();
         });
         btnPanel.add(btnRicomincia);
 
-        btnAbbandona = StyledButton.piccolo("Menu", new Color(120, 30, 30));
+        btnAbbandona = StyledButton.piccolo("Menu", Constants.BTN_RED);
         btnAbbandona.addActionListener(e -> {
             int scelta = javax.swing.JOptionPane.showConfirmDialog(this,
                     "Vuoi abbandonare la partita?", "Abbandona",

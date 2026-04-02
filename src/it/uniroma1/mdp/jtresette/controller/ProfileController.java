@@ -39,7 +39,9 @@ public class ProfileController {
                 stats.getPartiteGiocate(),
                 stats.getPartiteVinte(),
                 stats.getPartitePerse(),
-                profilo.getLivello()
+                profilo.getLivello(),
+                stats.getXpNelLivello(),
+                stats.getXpPerLivello()
         );
     }
 

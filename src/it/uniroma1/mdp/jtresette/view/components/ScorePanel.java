@@ -61,16 +61,16 @@ public class ScorePanel extends JPanel {
 
         // Sfondo semi-trasparente
         g2d.setColor(Constants.PANEL_BG);
-        g2d.fillRoundRect(5, 5, getWidth() - 10, getHeight() - 10, 15, 15);
-        g2d.setColor(Constants.GOLD);
-        g2d.drawRoundRect(5, 5, getWidth() - 10, getHeight() - 10, 15, 15);
+        g2d.fillRoundRect(5, 5, getWidth() - 10, getHeight() - 10, 12, 12);
+        g2d.setColor(new Color(80, 80, 90, 80));
+        g2d.drawRoundRect(5, 5, getWidth() - 10, getHeight() - 10, 12, 12);
 
         // Titolo
         g2d.setFont(Constants.SCORE_FONT);
-        g2d.setColor(Constants.GOLD);
+        g2d.setColor(Constants.TEXT_WHITE);
         g2d.drawString("PUNTEGGI", 30, 30);
 
-        g2d.setColor(Constants.GOLD);
+        g2d.setColor(new Color(80, 80, 90));
         g2d.drawLine(15, 38, getWidth() - 15, 38);
 
         // Obiettivo
@@ -92,7 +92,7 @@ public class ScorePanel extends JPanel {
         int textX = (avatarImages != null) ? 15 + AVATAR_SIZE + 6 : 15;
 
         for (int idx : ordinati) {
-            Color colore = idx == 0 ? Constants.GOLD : Constants.TEXT_WHITE;
+            Color colore = idx == 0 ? Constants.TEXT_WHITE : Constants.TEXT_MUTED;
 
             // Avatar
             if (avatarImages != null && idx < avatarImages.length && avatarImages[idx] != null) {
@@ -122,7 +122,7 @@ public class ScorePanel extends JPanel {
             g2d.setColor(new Color(50, 50, 50));
             g2d.fillRoundRect(15, barY, getWidth() - 30, 8, 4, 4);
             float progresso = Math.min(1f, (float) punteggi[idx] / obiettivoTerzi);
-            g2d.setColor(idx == 0 ? Constants.GOLD : new Color(100, 150, 255));
+            g2d.setColor(idx == 0 ? Constants.BTN_GREEN : new Color(100, 150, 200));
             g2d.fillRoundRect(15, barY, (int) ((getWidth() - 30) * progresso), 8, 4, 4);
 
             y += 50;

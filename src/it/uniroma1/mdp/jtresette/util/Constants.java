@@ -24,10 +24,16 @@ public final class Constants {
     public static final Color TABLE_GREEN = new Color(0, 100, 0);
     public static final Color TABLE_GREEN_DARK = new Color(0, 80, 0);
     public static final Color GOLD = new Color(218, 165, 32);
-    public static final Color MENU_BG = new Color(25, 25, 60);
-    public static final Color CARD_HIGHLIGHT = new Color(255, 255, 100, 120);
+    public static final Color ACCENT = new Color(200, 200, 210);
+    public static final Color BG_DARK = new Color(20, 38, 28);
+    public static final Color BG_LIGHTER = new Color(30, 55, 38);
+    public static final Color CARD_HIGHLIGHT = new Color(255, 255, 255, 100);
     public static final Color TEXT_WHITE = new Color(240, 240, 240);
-    public static final Color PANEL_BG = new Color(0, 0, 0, 120);
+    public static final Color TEXT_MUTED = new Color(160, 160, 170);
+    public static final Color PANEL_BG = new Color(0, 0, 0, 100);
+    public static final Color BTN_GREEN = new Color(40, 160, 70);
+    public static final Color BTN_RED = new Color(180, 50, 50);
+    public static final Color BTN_DEFAULT = new Color(60, 60, 70);
 
     // Font
     public static final Font TITLE_FONT = new Font("Serif", Font.BOLD, 48);

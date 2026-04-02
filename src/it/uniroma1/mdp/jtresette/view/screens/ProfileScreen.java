@@ -31,6 +31,12 @@ public class ProfileScreen extends JPanel {
     private final JPanel avatarSelectionPanel;
     private String selectedAvatarId = "avatar_01";
 
+    // XP
+    private final JPanel xpBarPanel;
+    private int xpNelLivello;
+    private int xpPerLivello = 350;
+    private int livelloCorrente = 1;
+
     // Feedback salvataggio
     private final JLabel lblFeedback;
     private Timer feedbackTimer;
@@ -46,7 +52,7 @@ public class ProfileScreen extends JPanel {
         // Titolo
         JLabel titolo = new JLabel("Profilo Giocatore", SwingConstants.CENTER);
         titolo.setFont(new Font("Serif", Font.BOLD, 36));
-        titolo.setForeground(Constants.GOLD);
+        titolo.setForeground(Constants.TEXT_WHITE);
         gbc.gridy = 0;
         gbc.insets = new Insets(0, 0, 20, 0);
         add(titolo, gbc);
@@ -57,11 +63,11 @@ public class ProfileScreen extends JPanel {
             protected void paintComponent(Graphics g) {
                 Graphics2D g2d = (Graphics2D) g;
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2d.setColor(new Color(0, 0, 0, 100));
-                g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
-                g2d.setColor(new Color(218, 165, 32, 80));
-                g2d.setStroke(new BasicStroke(1.5f));
-                g2d.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 20, 20);
+                g2d.setColor(new Color(0, 0, 0, 80));
+                g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 16, 16);
+                g2d.setColor(new Color(80, 80, 90, 80));
+                g2d.setStroke(new BasicStroke(1f));
+                g2d.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 16, 16);
             }
         };
         card.setOpaque(false);
@@ -101,11 +107,11 @@ public class ProfileScreen extends JPanel {
 
         txtNickname = new JTextField(15);
         txtNickname.setFont(Constants.LABEL_FONT);
-        txtNickname.setBackground(new Color(40, 40, 80));
+        txtNickname.setBackground(new Color(50, 50, 55));
         txtNickname.setForeground(Constants.TEXT_WHITE);
         txtNickname.setCaretColor(Constants.TEXT_WHITE);
         txtNickname.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(100, 100, 160), 1),
+                BorderFactory.createLineBorder(new Color(80, 80, 90), 1),
                 BorderFactory.createEmptyBorder(5, 8, 5, 8)));
         gc.gridx = 1;
         gc.anchor = GridBagConstraints.WEST;
@@ -157,6 +163,25 @@ public class ProfileScreen extends JPanel {
         gc.gridx = 1;
         gc.anchor = GridBagConstraints.WEST;
         card.add(lblLivello, gc);
+
+        // Barra XP
+        xpBarPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2d = (Graphics2D) g.create();
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                disegnaXpBar(g2d, getWidth(), getHeight());
+                g2d.dispose();
+            }
+        };
+        xpBarPanel.setOpaque(false);
+        xpBarPanel.setPreferredSize(new Dimension(300, 40));
+        gc.gridy = 8;
+        gc.gridx = 0;
+        gc.gridwidth = 2;
+        gc.anchor = GridBagConstraints.CENTER;
+        gc.insets = new Insets(10, 10, 6, 10);
+        card.add(xpBarPanel, gc);
 
         gbc.gridy = 1;
         gbc.insets = new Insets(0, 0, 25, 0);
@@ -251,14 +276,14 @@ public class ProfileScreen extends JPanel {
     private JLabel creaLabel(String testo) {
         JLabel lbl = new JLabel(testo);
         lbl.setFont(Constants.LABEL_FONT);
-        lbl.setForeground(new Color(180, 180, 210));
+        lbl.setForeground(Constants.TEXT_MUTED);
         return lbl;
     }
 
     private JLabel creaValoreLabel(String testo) {
         JLabel lbl = new JLabel(testo);
         lbl.setFont(new Font("SansSerif", Font.BOLD, 16));
-        lbl.setForeground(Constants.GOLD);
+        lbl.setForeground(Constants.TEXT_WHITE);
         return lbl;
     }
 
@@ -266,8 +291,8 @@ public class ProfileScreen extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-        GradientPaint bg = new GradientPaint(0, 0, new Color(10, 10, 40),
-                0, getHeight(), new Color(30, 30, 70));
+        GradientPaint bg = new GradientPaint(0, 0, Constants.BG_DARK,
+                0, getHeight(), Constants.BG_LIGHTER);
         g2d.setPaint(bg);
         g2d.fillRect(0, 0, getWidth(), getHeight());
     }
@@ -299,13 +324,58 @@ public class ProfileScreen extends JPanel {
         aggiornaBordiSelezione();
     }
 
-    public void setStatistiche(int giocate, int vinte, int perse, int livello) {
+    public void setStatistiche(int giocate, int vinte, int perse, int livello,
+                               int xpNelLivello, int xpPerLivello) {
         lblPartiteGiocate.setText(String.valueOf(giocate));
         lblPartiteVinte.setText(String.valueOf(vinte));
         lblPartitePerse.setText(String.valueOf(perse));
         lblLivello.setText(String.valueOf(livello));
         double winRate = giocate > 0 ? (double) vinte / giocate * 100 : 0;
         lblWinRate.setText(String.format("%.1f%%", winRate));
+        this.livelloCorrente = livello;
+        this.xpNelLivello = xpNelLivello;
+        this.xpPerLivello = xpPerLivello;
+        xpBarPanel.repaint();
+    }
+
+    /** Disegna la barra XP con livelli. */
+    private void disegnaXpBar(Graphics2D g2d, int w, int h) {
+        int barH = 14;
+        int barY = h / 2 - barH / 2 + 4;
+        int leftPad = 28;
+        int rightPad = 28;
+        int barW = w - leftPad - rightPad;
+
+        // Stella livello corrente
+        g2d.setFont(new Font("SansSerif", Font.BOLD, 12));
+        g2d.setColor(Constants.GOLD);
+        g2d.drawString("\u2605", 2, barY + barH / 2 + 4);
+        g2d.setColor(Constants.TEXT_WHITE);
+        g2d.drawString(String.valueOf(livelloCorrente), 16, barY + barH / 2 + 4);
+
+        // Sfondo barra
+        g2d.setColor(new Color(50, 50, 55));
+        g2d.fillRoundRect(leftPad, barY, barW, barH, 8, 8);
+
+        // Progresso
+        float progresso = xpPerLivello > 0 ? Math.min(1f, (float) xpNelLivello / xpPerLivello) : 0;
+        g2d.setColor(Constants.BTN_GREEN);
+        int fillW = (int) (barW * progresso);
+        if (fillW > 0) {
+            g2d.fillRoundRect(leftPad, barY, fillW, barH, 8, 8);
+        }
+
+        // Stella livello successivo
+        g2d.setColor(Constants.TEXT_MUTED);
+        g2d.drawString("\u2605", w - rightPad + 4, barY + barH / 2 + 4);
+        g2d.drawString(String.valueOf(livelloCorrente + 1), w - rightPad + 18, barY + barH / 2 + 4);
+
+        // Testo XP sopra la barra
+        String xpText = xpNelLivello + "/" + xpPerLivello;
+        g2d.setFont(new Font("SansSerif", Font.PLAIN, 11));
+        FontMetrics fm = g2d.getFontMetrics();
+        g2d.setColor(Constants.TEXT_MUTED);
+        g2d.drawString(xpText, leftPad + (barW - fm.stringWidth(xpText)) / 2, barY - 4);
     }
 
     public void addSalvaListener(ActionListener l) { btnSalva.addActionListener(l); }

@@ -97,13 +97,23 @@ public class TavoloPanel extends JPanel {
         // Disegna carte giocate al centro
         disegnaCarteGiocate(g2d, centerX, centerY);
 
-        // Messaggio temporaneo
+        // Messaggio temporaneo (dichiarazioni) — posizionato a destra
         if (messaggioTemporaneo != null && System.currentTimeMillis() < messaggioScadenza) {
-            g2d.setFont(Constants.SUBTITLE_FONT);
-            g2d.setColor(Constants.GOLD);
+            Font msgFont = new Font("Serif", Font.BOLD | Font.ITALIC, 22);
+            g2d.setFont(msgFont);
             FontMetrics fm = g2d.getFontMetrics();
-            g2d.drawString(messaggioTemporaneo,
-                    centerX - fm.stringWidth(messaggioTemporaneo) / 2, centerY - 140);
+            int msgW = fm.stringWidth(messaggioTemporaneo) + 24;
+            int msgH = fm.getHeight() + 12;
+            int msgX = getWidth() - msgW - 20;
+            int msgY = 20;
+
+            // Sfondo semi-trasparente
+            g2d.setColor(new Color(0, 0, 0, 120));
+            g2d.fillRoundRect(msgX, msgY, msgW, msgH, 10, 10);
+
+            // Testo
+            g2d.setColor(Constants.TEXT_WHITE);
+            g2d.drawString(messaggioTemporaneo, msgX + 12, msgY + fm.getAscent() + 6);
         }
     }
 

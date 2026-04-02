@@ -9,9 +9,7 @@ import javax.swing.JButton;
 import it.uniroma1.mdp.jtresette.util.Constants;
 
 /**
- * Bottone personalizzato con rendering custom che funziona
- * su tutti i Look&Feel (incluso Windows nativo).
- * Disegna sfondo, bordo e testo manualmente.
+ * Bottone flat moderno con rendering custom.
  */
 public class StyledButton extends JButton {
 
@@ -20,21 +18,19 @@ public class StyledButton extends JButton {
     private Color bgColor;
     private Color bgHoverColor;
     private Color bgPressedColor;
-    private Color borderColor;
     private Color textColor;
     private boolean hovered = false;
     private boolean pressed = false;
 
     public StyledButton(String text) {
-        this(text, new Color(50, 50, 110), Constants.GOLD);
+        this(text, Constants.BTN_DEFAULT);
     }
 
-    public StyledButton(String text, Color bgColor, Color borderColor) {
+    public StyledButton(String text, Color bgColor) {
         super(text);
         this.bgColor = bgColor;
-        this.bgHoverColor = bgColor.brighter();
+        this.bgHoverColor = brighten(bgColor, 25);
         this.bgPressedColor = bgColor.darker();
-        this.borderColor = borderColor;
         this.textColor = Constants.TEXT_WHITE;
 
         setContentAreaFilled(false);
@@ -43,7 +39,7 @@ public class StyledButton extends JButton {
         setOpaque(false);
         setFont(Constants.BUTTON_FONT);
         setCursor(new Cursor(Cursor.HAND_CURSOR));
-        setPreferredSize(new Dimension(250, 50));
+        setPreferredSize(new Dimension(250, 48));
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -75,17 +71,17 @@ public class StyledButton extends JButton {
 
     /** Crea un bottone verde (per azioni principali). */
     public static StyledButton verde(String text) {
-        return new StyledButton(text, new Color(20, 100, 30), new Color(80, 200, 80));
+        return new StyledButton(text, Constants.BTN_GREEN);
     }
 
     /** Crea un bottone rosso (per azioni distruttive). */
     public static StyledButton rosso(String text) {
-        return new StyledButton(text, new Color(120, 30, 30), new Color(200, 80, 80));
+        return new StyledButton(text, Constants.BTN_RED);
     }
 
     /** Crea un bottone piccolo per la barra superiore. */
     public static StyledButton piccolo(String text, Color bgColor) {
-        StyledButton btn = new StyledButton(text, bgColor, Constants.GOLD);
+        StyledButton btn = new StyledButton(text, bgColor);
         btn.setFont(new Font("SansSerif", Font.BOLD, 12));
         btn.setPreferredSize(new Dimension(100, 30));
         return btn;
@@ -99,53 +95,38 @@ public class StyledButton extends JButton {
         int w = getWidth();
         int h = getHeight();
 
-        // Sfondo con stato
+        // Sfondo flat
         Color bg = pressed ? bgPressedColor : (hovered ? bgHoverColor : bgColor);
         g2d.setColor(bg);
-        g2d.fillRoundRect(0, 0, w - 1, h - 1, 12, 12);
+        g2d.fillRoundRect(0, 0, w, h, 14, 14);
 
-        // Effetto luce in alto (gradiente sottile)
-        if (!pressed) {
-            GradientPaint shine = new GradientPaint(0, 0, new Color(255, 255, 255, 40),
-                    0, h / 2, new Color(255, 255, 255, 0));
-            g2d.setPaint(shine);
-            g2d.fillRoundRect(0, 0, w - 1, h / 2, 12, 12);
-        }
-
-        // Bordo
-        g2d.setColor(hovered ? borderColor.brighter() : borderColor);
-        g2d.setStroke(new BasicStroke(2f));
-        g2d.drawRoundRect(1, 1, w - 3, h - 3, 12, 12);
-
-        // Testo centrato con ombra
+        // Testo centrato
         g2d.setFont(getFont());
         FontMetrics fm = g2d.getFontMetrics();
         String text = getText();
         int textX = (w - fm.stringWidth(text)) / 2;
         int textY = (h + fm.getAscent() - fm.getDescent()) / 2;
 
-        // Ombra testo
-        g2d.setColor(new Color(0, 0, 0, 100));
-        g2d.drawString(text, textX + 1, textY + 1);
-
-        // Testo
         g2d.setColor(textColor);
         g2d.drawString(text, textX, textY);
 
         g2d.dispose();
     }
 
+    private static Color brighten(Color c, int amount) {
+        return new Color(
+                Math.min(255, c.getRed() + amount),
+                Math.min(255, c.getGreen() + amount),
+                Math.min(255, c.getBlue() + amount));
+    }
+
     public void setBgColor(Color bgColor) {
         this.bgColor = bgColor;
-        this.bgHoverColor = bgColor.brighter();
+        this.bgHoverColor = brighten(bgColor, 25);
         this.bgPressedColor = bgColor.darker();
     }
 
     public void setTextColor(Color textColor) {
         this.textColor = textColor;
-    }
-
-    public void setBorderColor(Color borderColor) {
-        this.borderColor = borderColor;
     }
 }

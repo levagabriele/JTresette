@@ -46,14 +46,16 @@ public class ProfileManager {
         }
     }
 
-    /** Registra la fine di una partita. */
-    public void registraPartita(boolean vittoria, int puntiSegnati) {
+    /** Registra la fine di una partita. Restituisce gli XP guadagnati. */
+    public int registraPartita(boolean vittoria, int puntiSegnati) {
+        int xpGuadagnati;
         if (vittoria) {
-            profilo.getStatistiche().registraVittoria(puntiSegnati);
+            xpGuadagnati = profilo.getStatistiche().registraVittoria(puntiSegnati);
         } else {
-            profilo.getStatistiche().registraSconfitta(puntiSegnati);
+            xpGuadagnati = profilo.getStatistiche().registraSconfitta(puntiSegnati);
         }
         salva();
+        return xpGuadagnati;
     }
 
     public ProfiloGiocatore getProfilo() {

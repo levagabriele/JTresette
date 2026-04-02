@@ -92,9 +92,16 @@ public class GameController {
         gameScreen.setOnGameOver(() -> {
             int vincitore = partita.getVincitore();
             boolean haVinto = vincitore == 0;
+            ProfileManager pm = ProfileManager.getInstance();
+            var stats = pm.getProfilo().getStatistiche();
+            int xpNelLivelloPrima = stats.getXpNelLivello();
+            int livelloPrima = stats.getLivello();
+            int puntiUmano = partita.getPunteggiTotali()[0];
+            int xpGuadagnati = pm.registraPartita(haVinto, puntiUmano);
             mainFrame.getGameOverScreen().mostraRisultati(
                     giocatori.get(vincitore).getNome(), haVinto,
-                    partita.getPunteggiTotali(), nomi);
+                    partita.getPunteggiTotali(), nomi,
+                    xpGuadagnati, stats.getXpNelLivello(), stats.getXpPerLivello(), stats.getLivello());
             mainFrame.mostraSchermata(Constants.SCREEN_GAME_OVER);
         });
 
@@ -151,11 +158,8 @@ public class GameController {
             if (partitaInterrotta) return;
             partita.terminaPartita();
 
-            // Registra risultato nel profilo
             int vincitore = partita.getVincitore();
             boolean haVinto = vincitore == 0;
-            int puntiUmano = partita.getPunteggiTotali()[0];
-            ProfileManager.getInstance().registraPartita(haVinto, puntiUmano);
 
             if (haVinto) {
                 AudioManager.getInstance().play(SoundEffect.GAME_WIN);

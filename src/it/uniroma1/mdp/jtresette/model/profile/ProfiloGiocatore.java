@@ -27,9 +27,9 @@ public class ProfiloGiocatore {
 
     public Statistiche getStatistiche() { return statistiche; }
 
-    /** Livello calcolato in base alle vittorie. */
+    /** Livello calcolato in base agli XP. */
     public int getLivello() {
-        return statistiche.getPartiteVinte() / 3 + 1;
+        return statistiche.getLivello();
     }
 
     @Override
