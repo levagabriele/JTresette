@@ -2,7 +2,10 @@ package it.uniroma1.mdp.jtresette.view.screens;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import it.uniroma1.mdp.jtresette.util.Constants;
@@ -27,13 +30,28 @@ public class MenuScreen extends JPanel {
         gbc.fill = GridBagConstraints.NONE;
         gbc.anchor = GridBagConstraints.CENTER;
 
-        // Titolo
-        JLabel titolo = new JLabel("JTresette", SwingConstants.CENTER);
+        // Titolo con icona
+        JPanel titoloPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 0));
+        titoloPanel.setOpaque(false);
+
+        try {
+            File iconFile = new File(Constants.RESOURCES_PATH + "images/icon.png");
+            if (iconFile.exists()) {
+                BufferedImage iconImg = ImageIO.read(iconFile);
+                Image scaled = iconImg.getScaledInstance(64, 64, Image.SCALE_SMOOTH);
+                JLabel iconLabel = new JLabel(new ImageIcon(scaled));
+                titoloPanel.add(iconLabel);
+            }
+        } catch (Exception ignored) { }
+
+        JLabel titolo = new JLabel("JTresette");
         titolo.setFont(new Font("Serif", Font.BOLD, 64));
         titolo.setForeground(Constants.TEXT_WHITE);
+        titoloPanel.add(titolo);
+
         gbc.gridy = 0;
         gbc.insets = new Insets(0, 0, 5, 0);
-        add(titolo, gbc);
+        add(titoloPanel, gbc);
 
         // Sottotitolo
         JLabel sottotitolo = new JLabel("Il classico gioco di carte italiano", SwingConstants.CENTER);

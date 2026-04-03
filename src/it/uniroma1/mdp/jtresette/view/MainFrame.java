@@ -1,6 +1,7 @@
 package it.uniroma1.mdp.jtresette.view;
 
 import java.awt.*;
+import java.io.File;
 
 import javax.swing.*;
 
@@ -34,6 +35,12 @@ public class MainFrame extends JFrame {
         setSize(Constants.WINDOW_SIZE);
         setMinimumSize(Constants.WINDOW_SIZE);
         setLocationRelativeTo(null);
+
+        // Icona applicazione
+        File iconFile = new File(Constants.RESOURCES_PATH + "images/icon.png");
+        if (iconFile.exists()) {
+            setIconImage(Toolkit.getDefaultToolkit().getImage(iconFile.getAbsolutePath()));
+        }
 
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
