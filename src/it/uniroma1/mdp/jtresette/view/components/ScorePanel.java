@@ -74,7 +74,7 @@ public class ScorePanel extends JPanel {
         g2d.drawLine(15, 38, getWidth() - 15, 38);
 
         // Obiettivo
-        g2d.setFont(new Font("SansSerif", Font.PLAIN, 11));
+        g2d.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         g2d.setColor(Constants.TEXT_WHITE);
         g2d.drawString("Obiettivo: " + RegoleTresette.formattaPunti(obiettivoTerzi), 15, 55);
 
@@ -112,7 +112,7 @@ public class ScorePanel extends JPanel {
 
             // Punteggio (sotto il nome, allineato a destra)
             String puntiStr = RegoleTresette.formattaPunti(punteggi[idx]);
-            g2d.setFont(new Font("SansSerif", Font.PLAIN, 12));
+            g2d.setFont(new Font("Segoe UI", Font.PLAIN, 12));
             fm = g2d.getFontMetrics();
             g2d.setColor(new Color(colore.getRed(), colore.getGreen(), colore.getBlue(), 200));
             g2d.drawString(puntiStr, textX, y + fm.getHeight());

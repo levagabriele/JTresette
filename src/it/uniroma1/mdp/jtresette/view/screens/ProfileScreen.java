@@ -51,7 +51,7 @@ public class ProfileScreen extends JPanel {
 
         // Titolo
         JLabel titolo = new JLabel("Profilo Giocatore", SwingConstants.CENTER);
-        titolo.setFont(new Font("Serif", Font.BOLD, 36));
+        titolo.setFont(new Font("Segoe UI", Font.BOLD, 36));
         titolo.setForeground(Constants.TEXT_WHITE);
         gbc.gridy = 0;
         gbc.insets = new Insets(0, 0, 20, 0);
@@ -203,7 +203,7 @@ public class ProfileScreen extends JPanel {
 
         // Label di feedback (inizialmente nascosta)
         lblFeedback = new JLabel("", SwingConstants.CENTER);
-        lblFeedback.setFont(new Font("SansSerif", Font.BOLD, 15));
+        lblFeedback.setFont(new Font("Segoe UI", Font.BOLD, 15));
         lblFeedback.setVisible(false);
         gbc.gridy = 3;
         gbc.insets = new Insets(10, 0, 0, 0);
@@ -282,7 +282,7 @@ public class ProfileScreen extends JPanel {
 
     private JLabel creaValoreLabel(String testo) {
         JLabel lbl = new JLabel(testo);
-        lbl.setFont(new Font("SansSerif", Font.BOLD, 16));
+        lbl.setFont(new Font("Segoe UI", Font.BOLD, 16));
         lbl.setForeground(Constants.TEXT_WHITE);
         return lbl;
     }
@@ -347,7 +347,7 @@ public class ProfileScreen extends JPanel {
         int barW = w - leftPad - rightPad;
 
         // Stella livello corrente
-        g2d.setFont(new Font("SansSerif", Font.BOLD, 12));
+        g2d.setFont(new Font("Segoe UI Symbol", Font.BOLD, 12));
         g2d.setColor(Constants.GOLD);
         g2d.drawString("\u2605", 2, barY + barH / 2 + 4);
         g2d.setColor(Constants.TEXT_WHITE);
@@ -366,13 +366,14 @@ public class ProfileScreen extends JPanel {
         }
 
         // Stella livello successivo
+        g2d.setFont(new Font("Segoe UI Symbol", Font.BOLD, 12));
         g2d.setColor(Constants.TEXT_MUTED);
         g2d.drawString("\u2605", w - rightPad + 4, barY + barH / 2 + 4);
         g2d.drawString(String.valueOf(livelloCorrente + 1), w - rightPad + 18, barY + barH / 2 + 4);
 
         // Testo XP sopra la barra
         String xpText = xpNelLivello + "/" + xpPerLivello;
-        g2d.setFont(new Font("SansSerif", Font.PLAIN, 11));
+        g2d.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         FontMetrics fm = g2d.getFontMetrics();
         g2d.setColor(Constants.TEXT_MUTED);
         g2d.drawString(xpText, leftPad + (barW - fm.stringWidth(xpText)) / 2, barY - 4);

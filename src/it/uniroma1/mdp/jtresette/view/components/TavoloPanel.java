@@ -109,7 +109,7 @@ public class TavoloPanel extends JPanel {
 
         // Messaggio temporaneo (dichiarazioni) — posizionato a destra
         if (messaggioTemporaneo != null && System.currentTimeMillis() < messaggioScadenza) {
-            Font msgFont = new Font("Serif", Font.BOLD | Font.ITALIC, 22);
+            Font msgFont = new Font("Segoe UI", Font.BOLD | Font.ITALIC, 22);
             g2d.setFont(msgFont);
             FontMetrics fm = g2d.getFontMetrics();
             int msgW = fm.stringWidth(messaggioTemporaneo) + 24;

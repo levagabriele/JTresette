@@ -32,7 +32,7 @@ public class GameSetupScreen extends JPanel {
 
         // Titolo
         JLabel titolo = new JLabel("Configura Partita", SwingConstants.CENTER);
-        titolo.setFont(new Font("Serif", Font.BOLD, 36));
+        titolo.setFont(new Font("Segoe UI", Font.BOLD, 36));
         titolo.setForeground(Constants.TEXT_WHITE);
         gbc.gridy = 0;
         gbc.insets = new Insets(0, 0, 30, 0);
@@ -40,7 +40,7 @@ public class GameSetupScreen extends JPanel {
 
         // Sezione giocatori
         JLabel lblGiocatori = new JLabel("Numero di avversari:");
-        lblGiocatori.setFont(new Font("SansSerif", Font.BOLD, 18));
+        lblGiocatori.setFont(new Font("Segoe UI", Font.BOLD, 18));
         lblGiocatori.setForeground(Constants.TEXT_WHITE);
         gbc.gridy = 1;
         gbc.insets = new Insets(10, 0, 10, 0);
@@ -68,7 +68,7 @@ public class GameSetupScreen extends JPanel {
 
         // Sezione difficolta'
         JLabel lblDifficolta = new JLabel("Difficolta' AI:");
-        lblDifficolta.setFont(new Font("SansSerif", Font.BOLD, 18));
+        lblDifficolta.setFont(new Font("Segoe UI", Font.BOLD, 18));
         lblDifficolta.setForeground(Constants.TEXT_WHITE);
         gbc.gridy = 3;
         gbc.insets = new Insets(10, 0, 10, 0);
@@ -138,7 +138,7 @@ public class GameSetupScreen extends JPanel {
                 g2d.drawString(getText(), size + 8, (getHeight() + fm.getAscent() - fm.getDescent()) / 2);
             }
         };
-        rb.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        rb.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         rb.setForeground(Constants.TEXT_WHITE);
         rb.setOpaque(false);
         rb.setFocusPainted(false);

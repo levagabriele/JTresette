@@ -36,11 +36,11 @@ public final class Constants {
     public static final Color BTN_DEFAULT = new Color(60, 60, 70);
 
     // Font
-    public static final Font TITLE_FONT = new Font("Serif", Font.BOLD, 48);
-    public static final Font SUBTITLE_FONT = new Font("Serif", Font.BOLD, 24);
-    public static final Font BUTTON_FONT = new Font("SansSerif", Font.BOLD, 18);
-    public static final Font LABEL_FONT = new Font("SansSerif", Font.PLAIN, 16);
-    public static final Font SCORE_FONT = new Font("SansSerif", Font.BOLD, 14);
+    public static final Font TITLE_FONT = new Font("Segoe UI", Font.BOLD, 48);
+    public static final Font SUBTITLE_FONT = new Font("Segoe UI", Font.BOLD, 24);
+    public static final Font BUTTON_FONT = new Font("Segoe UI", Font.BOLD, 18);
+    public static final Font LABEL_FONT = new Font("Segoe UI", Font.PLAIN, 16);
+    public static final Font SCORE_FONT = new Font("Segoe UI", Font.BOLD, 14);
 
     // Animazioni
     public static final int ANIMATION_FPS = 60;

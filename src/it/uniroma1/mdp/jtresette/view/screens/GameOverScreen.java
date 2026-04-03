@@ -71,13 +71,13 @@ public class GameOverScreen extends JPanel {
         gbc.insets = new Insets(8, 0, 8, 0);
 
         lblRisultato = new JLabel("", SwingConstants.CENTER);
-        lblRisultato.setFont(new Font("SansSerif", Font.BOLD, 48));
+        lblRisultato.setFont(new Font("Segoe UI", Font.BOLD, 48));
         gbc.gridy = 0;
         gbc.insets = new Insets(0, 0, 4, 0);
         add(lblRisultato, gbc);
 
         lblSottotitolo = new JLabel("", SwingConstants.CENTER);
-        lblSottotitolo.setFont(new Font("SansSerif", Font.PLAIN, 18));
+        lblSottotitolo.setFont(new Font("Segoe UI", Font.PLAIN, 18));
         lblSottotitolo.setForeground(Constants.TEXT_MUTED);
         gbc.gridy = 1;
         gbc.insets = new Insets(0, 0, 20, 0);
@@ -114,7 +114,7 @@ public class GameOverScreen extends JPanel {
             }
         };
         xpPanel.setOpaque(false);
-        xpPanel.setPreferredSize(new Dimension(380, 60));
+        xpPanel.setPreferredSize(new Dimension(380, 75));
         gbc.gridy = 3;
         gbc.insets = new Insets(0, 0, 25, 0);
         add(xpPanel, gbc);
@@ -155,7 +155,7 @@ public class GameOverScreen extends JPanel {
 
         punteggiPanel.removeAll();
         JLabel header = new JLabel("  PUNTEGGI FINALI");
-        header.setFont(new Font("SansSerif", Font.BOLD, 14));
+        header.setFont(new Font("Segoe UI", Font.BOLD, 14));
         header.setForeground(Constants.TEXT_WHITE);
         header.setAlignmentX(Component.LEFT_ALIGNMENT);
         punteggiPanel.add(header);
@@ -163,7 +163,7 @@ public class GameOverScreen extends JPanel {
 
         for (int i = 0; i < punteggi.length; i++) {
             JLabel lbl = new JLabel("  " + nomiGiocatori[i] + ":  " + RegoleTresette.formattaPunti(punteggi[i]) + " punti");
-            lbl.setFont(new Font("SansSerif", Font.PLAIN, 16));
+            lbl.setFont(new Font("Segoe UI", Font.PLAIN, 16));
             lbl.setForeground(i == 0 ? Constants.TEXT_WHITE : Constants.TEXT_MUTED);
             lbl.setAlignmentX(Component.LEFT_ALIGNMENT);
             punteggiPanel.add(lbl);
@@ -334,13 +334,13 @@ public class GameOverScreen extends JPanel {
     /** Disegna la barra XP con livelli. */
     private void disegnaXpBar(Graphics2D g2d, int w, int h) {
         int barH = 16;
-        int barY = h / 2 - barH / 2 + 8;
+        int barY = 22;
         int leftPad = 30;
         int rightPad = 30;
         int barW = w - leftPad - rightPad;
 
         // Stella livello corrente (sinistra)
-        g2d.setFont(new Font("SansSerif", Font.BOLD, 12));
+        g2d.setFont(new Font("Segoe UI Symbol", Font.BOLD, 12));
         g2d.setColor(Constants.GOLD);
         g2d.drawString("\u2605", 6, barY + barH / 2 + 4);
         g2d.setColor(Constants.TEXT_WHITE);
@@ -362,24 +362,25 @@ public class GameOverScreen extends JPanel {
         }
 
         // Stella livello successivo (destra)
+        g2d.setFont(new Font("Segoe UI Symbol", Font.BOLD, 12));
         g2d.setColor(Constants.TEXT_MUTED);
         g2d.drawString("\u2605", w - rightPad + 6, barY + barH / 2 + 4);
         g2d.drawString(String.valueOf(livello + 1), w - rightPad + 20, barY + barH / 2 + 4);
 
         // Testo XP sopra la barra
         String xpText = xpNelLivello + "/" + xpPerLivello;
-        g2d.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        g2d.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         FontMetrics fm = g2d.getFontMetrics();
         g2d.setColor(Constants.TEXT_MUTED);
         g2d.drawString(xpText, leftPad + (barW - fm.stringWidth(xpText)) / 2, barY - 6);
 
-        // +XP guadagnati (appare solo quando la barra ha finito di animarsi)
+        // +XP guadagnati (appare sotto la barra, centrato)
         if (xpProgressoAnimato >= xpProgressoTarget && xpGuadagnati > 0) {
-            String plusXp = "+" + xpGuadagnati;
+            String plusXp = "+" + xpGuadagnati + " XP";
             g2d.setColor(Constants.BTN_GREEN);
-            g2d.setFont(new Font("SansSerif", Font.BOLD, 13));
+            g2d.setFont(new Font("Segoe UI", Font.BOLD, 12));
             fm = g2d.getFontMetrics();
-            g2d.drawString(plusXp, leftPad + barFill - fm.stringWidth(plusXp) / 2, barY - 6);
+            g2d.drawString(plusXp, leftPad + (barW - fm.stringWidth(plusXp)) / 2, barY + barH + fm.getHeight());
         }
     }
 

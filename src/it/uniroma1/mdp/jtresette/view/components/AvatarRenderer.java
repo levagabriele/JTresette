@@ -77,7 +77,7 @@ public class AvatarRenderer {
         int fontSize = (int) (size * 0.45);
         g2.setFont(new Font("Serif", Font.BOLD, fontSize));
         FontMetrics fm = g2.getFontMetrics();
-        int textX = (size - fm.stringWidth(def.symbol)) / 2;
+        int textX = (size - fm.stringWidth(def.symbol)) / 2 + 1;
         int textY = (size + fm.getAscent() - fm.getDescent()) / 2;
         g2.drawString(def.symbol, textX, textY);
 

@@ -82,7 +82,7 @@ public class StyledButton extends JButton {
     /** Crea un bottone piccolo per la barra superiore. */
     public static StyledButton piccolo(String text, Color bgColor) {
         StyledButton btn = new StyledButton(text, bgColor);
-        btn.setFont(new Font("SansSerif", Font.BOLD, 12));
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 12));
         btn.setPreferredSize(new Dimension(100, 30));
         return btn;
     }

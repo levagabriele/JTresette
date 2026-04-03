@@ -45,7 +45,7 @@ public class MenuScreen extends JPanel {
         } catch (Exception ignored) { }
 
         JLabel titolo = new JLabel("JTresette");
-        titolo.setFont(new Font("Serif", Font.BOLD, 64));
+        titolo.setFont(new Font("Segoe UI", Font.BOLD, 52));
         titolo.setForeground(Constants.TEXT_WHITE);
         titoloPanel.add(titolo);
 
@@ -54,8 +54,8 @@ public class MenuScreen extends JPanel {
         add(titoloPanel, gbc);
 
         // Sottotitolo
-        JLabel sottotitolo = new JLabel("Il classico gioco di carte italiano", SwingConstants.CENTER);
-        sottotitolo.setFont(new Font("Serif", Font.ITALIC, 18));
+        JLabel sottotitolo = new JLabel("Il gioco di carte della tradizione napoletana", SwingConstants.CENTER);
+        sottotitolo.setFont(new Font("Segoe UI", Font.ITALIC, 18));
         sottotitolo.setForeground(Constants.TEXT_MUTED);
         gbc.gridy = 1;
         gbc.insets = new Insets(0, 0, 10, 0);
@@ -102,7 +102,7 @@ public class MenuScreen extends JPanel {
 
         // Versione
         JLabel versione = new JLabel("v1.0 - Metodologie di Programmazione 2024/25", SwingConstants.CENTER);
-        versione.setFont(new Font("SansSerif", Font.PLAIN, 11));
+        versione.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         versione.setForeground(new Color(100, 100, 130));
         gbc.gridy = 6;
         gbc.insets = new Insets(50, 0, 0, 0);

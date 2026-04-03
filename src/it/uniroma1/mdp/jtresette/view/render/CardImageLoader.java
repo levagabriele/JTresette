@@ -92,7 +92,7 @@ public class CardImageLoader {
         g.setColor(colore);
 
         // Valore grande al centro
-        g.setFont(new java.awt.Font("Serif", java.awt.Font.BOLD, 36));
+        g.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 36));
         String val = carta.getValore().getNumero() <= 7
                 ? String.valueOf(carta.getValore().getNumero())
                 : carta.getValore().getNome().substring(0, 1);
@@ -100,13 +100,13 @@ public class CardImageLoader {
         g.drawString(val, (150 - fm.stringWidth(val)) / 2, 90);
 
         // Nome seme sotto
-        g.setFont(new java.awt.Font("Serif", java.awt.Font.PLAIN, 16));
+        g.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 16));
         fm = g.getFontMetrics();
         String seme = carta.getSeme().getNome();
         g.drawString(seme, (150 - fm.stringWidth(seme)) / 2, 170);
 
         // Valore piccolo in alto a sinistra
-        g.setFont(new java.awt.Font("Serif", java.awt.Font.BOLD, 18));
+        g.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 18));
         g.drawString(val, 10, 25);
 
         g.dispose();
