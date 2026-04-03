@@ -1,17 +1,16 @@
 package it.uniroma1.mdp.jtresette.view;
 
-import java.awt.CardLayout;
+import java.awt.*;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 
 import it.uniroma1.mdp.jtresette.util.Constants;
 import it.uniroma1.mdp.jtresette.view.screens.*;
 
 /**
  * Finestra principale dell'applicazione JTresette.
- * Usa CardLayout per gestire la navigazione tra schermate.
+ * Usa CardLayout per gestire la navigazione tra schermate
+ * con transizione fade tra le schermate.
  */
 public class MainFrame extends JFrame {
 
@@ -24,6 +23,11 @@ public class MainFrame extends JFrame {
     private GameScreen gameScreen;
     private ProfileScreen profileScreen;
     private GameOverScreen gameOverScreen;
+
+    // Fade transition
+    private final FadeOverlay fadeOverlay;
+    private static final int FADE_DURATION_MS = 250;
+
     public MainFrame() {
         super("JTresette");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -46,17 +50,25 @@ public class MainFrame extends JFrame {
         mainPanel.add(profileScreen, Constants.SCREEN_PROFILE);
         mainPanel.add(gameOverScreen, Constants.SCREEN_GAME_OVER);
 
+        // Overlay per fade
+        fadeOverlay = new FadeOverlay();
+        setGlassPane(fadeOverlay);
+
         add(mainPanel);
         mostraSchermata(Constants.SCREEN_MENU);
-
     }
 
-    /** Mostra una schermata dato il suo nome. */
+    /** Mostra una schermata con transizione fade. */
     public void mostraSchermata(String nome) {
-        cardLayout.show(mainPanel, nome);
+        // Se non ancora visibile, mostra direttamente
+        if (!isVisible()) {
+            cardLayout.show(mainPanel, nome);
+            return;
+        }
+        fadeOverlay.eseguiFade(() -> cardLayout.show(mainPanel, nome));
     }
 
-    /** Imposta e mostra la schermata di gioco. */
+    /** Imposta e mostra la schermata di gioco (senza fade per non ritardare l'inizio). */
     public void setGameScreen(GameScreen screen) {
         if (this.gameScreen != null) {
             mainPanel.remove(this.gameScreen);
@@ -72,4 +84,76 @@ public class MainFrame extends JFrame {
     public ProfileScreen getProfileScreen() { return profileScreen; }
     public GameOverScreen getGameOverScreen() { return gameOverScreen; }
     public JPanel getMainPanel() { return mainPanel; }
+
+    /**
+     * Pannello overlay trasparente usato come glass pane per
+     * l'effetto fade-out/fade-in tra schermate.
+     */
+    private class FadeOverlay extends JPanel {
+
+        private float alpha = 0f;
+        private Timer timer;
+        private boolean fadingOut = true;
+        private Runnable onMidFade;
+        private long fadeInizio;
+
+        FadeOverlay() {
+            setOpaque(false);
+        }
+
+        void eseguiFade(Runnable midAction) {
+            if (timer != null && timer.isRunning()) {
+                timer.stop();
+                // Esegui subito l'azione in caso di fade interrotto
+                midAction.run();
+                alpha = 0f;
+                setVisible(false);
+                repaint();
+                return;
+            }
+
+            this.onMidFade = midAction;
+            this.fadingOut = true;
+            this.alpha = 0f;
+            this.fadeInizio = System.currentTimeMillis();
+            setVisible(true);
+
+            timer = new Timer(Constants.ANIMATION_DELAY_MS, e -> aggiornaFade());
+            timer.start();
+        }
+
+        private void aggiornaFade() {
+            long elapsed = System.currentTimeMillis() - fadeInizio;
+
+            if (fadingOut) {
+                // Fade out: 0 -> 1
+                alpha = Math.min(1f, (float) elapsed / FADE_DURATION_MS);
+                if (alpha >= 1f) {
+                    // Meta' della transizione: cambia schermata
+                    if (onMidFade != null) onMidFade.run();
+                    fadingOut = false;
+                    fadeInizio = System.currentTimeMillis();
+                }
+            } else {
+                // Fade in: 1 -> 0
+                alpha = 1f - Math.min(1f, (float) elapsed / FADE_DURATION_MS);
+                if (alpha <= 0f) {
+                    alpha = 0f;
+                    timer.stop();
+                    setVisible(false);
+                }
+            }
+            repaint();
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            if (alpha > 0f) {
+                Graphics2D g2d = (Graphics2D) g.create();
+                g2d.setColor(new Color(0, 0, 0, (int)(alpha * 255)));
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+                g2d.dispose();
+            }
+        }
+    }
 }

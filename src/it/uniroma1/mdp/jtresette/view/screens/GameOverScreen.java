@@ -2,6 +2,9 @@ package it.uniroma1.mdp.jtresette.view.screens;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import javax.swing.*;
 
@@ -11,6 +14,7 @@ import it.uniroma1.mdp.jtresette.view.components.StyledButton;
 
 /**
  * Schermata di fine partita con risultati, punteggi e barra XP.
+ * Include animazioni d'ingresso, barra XP animata e coriandoli sulla vittoria.
  */
 public class GameOverScreen extends JPanel {
 
@@ -28,6 +32,36 @@ public class GameOverScreen extends JPanel {
     private int xpNelLivello;
     private int xpPerLivello;
     private int livello;
+
+    // Animazione barra XP
+    private float xpProgressoAnimato = 0f;
+    private float xpProgressoTarget = 0f;
+    private Timer xpAnimTimer;
+
+    // Animazioni d'ingresso
+    private float titoloScale = 0f;
+    private float sottotitoloAlpha = 0f;
+    private float punteggiAlpha = 0f;
+    private float xpAlpha = 0f;
+    private float bottoniAlpha = 0f;
+    private Timer entrataTimer;
+    private long entrataInizio;
+
+    // Coriandoli
+    private boolean mostraCoriandoli = false;
+    private final List<Coriandolo> coriandoli = new ArrayList<>();
+    private Timer coriandoliTimer;
+    private static final int NUM_CORIANDOLI = 80;
+    private static final Random RANDOM = new Random();
+    private static final Color[] COLORI_CORIANDOLI = {
+        new Color(255, 215, 0),   // oro
+        new Color(40, 160, 70),   // verde
+        new Color(65, 135, 245),  // blu
+        new Color(255, 85, 85),   // rosso
+        new Color(200, 130, 255), // viola
+        new Color(255, 180, 50),  // arancione
+        Color.WHITE
+    };
 
     public GameOverScreen() {
         setLayout(new GridBagLayout());
@@ -137,14 +171,170 @@ public class GameOverScreen extends JPanel {
         }
         punteggiPanel.revalidate();
         punteggiPanel.repaint();
-        xpPanel.repaint();
+
+        // Avvia animazioni
+        avviaAnimazioniIngresso();
+        avviaAnimazioneXp();
+        if (haVintoUmano) {
+            avviaCoriandoli();
+        } else {
+            fermaCoriandoli();
+        }
+    }
+
+    // ==================== Animazione barra XP ====================
+
+    private void avviaAnimazioneXp() {
+        if (xpAnimTimer != null) xpAnimTimer.stop();
+        xpProgressoAnimato = 0f;
+        xpProgressoTarget = Math.min(1f, (float) xpNelLivello / xpPerLivello);
+
+        // Ritardo iniziale: la barra parte dopo che il pannello XP e' visibile
+        Timer delay = new Timer(1200, e -> {
+            xpAnimTimer = new Timer(Constants.ANIMATION_DELAY_MS, ev -> {
+                float velocita = 0.015f;
+                xpProgressoAnimato += velocita;
+                if (xpProgressoAnimato >= xpProgressoTarget) {
+                    xpProgressoAnimato = xpProgressoTarget;
+                    xpAnimTimer.stop();
+                }
+                xpPanel.repaint();
+            });
+            xpAnimTimer.start();
+        });
+        delay.setRepeats(false);
+        delay.start();
+    }
+
+    // ==================== Animazioni d'ingresso ====================
+
+    private void avviaAnimazioniIngresso() {
+        if (entrataTimer != null) entrataTimer.stop();
+
+        // Reset stato
+        titoloScale = 0f;
+        sottotitoloAlpha = 0f;
+        punteggiAlpha = 0f;
+        xpAlpha = 0f;
+        bottoniAlpha = 0f;
+        entrataInizio = System.currentTimeMillis();
+
+        entrataTimer = new Timer(Constants.ANIMATION_DELAY_MS, e -> {
+            long elapsed = System.currentTimeMillis() - entrataInizio;
+
+            // Titolo: 0-400ms (scale da 0 a 1 con overshoot)
+            titoloScale = animaValore(elapsed, 0, 400);
+
+            // Sottotitolo: 200-500ms (fade in)
+            sottotitoloAlpha = animaValore(elapsed, 200, 300);
+
+            // Punteggi: 400-700ms (fade in)
+            punteggiAlpha = animaValore(elapsed, 400, 300);
+
+            // XP: 700-1000ms (fade in)
+            xpAlpha = animaValore(elapsed, 700, 300);
+
+            // Bottoni: 900-1200ms (fade in)
+            bottoniAlpha = animaValore(elapsed, 900, 300);
+
+            if (elapsed > 1200) {
+                titoloScale = 1f;
+                sottotitoloAlpha = 1f;
+                punteggiAlpha = 1f;
+                xpAlpha = 1f;
+                bottoniAlpha = 1f;
+                entrataTimer.stop();
+            }
+
+            repaint();
+        });
+        entrataTimer.start();
+    }
+
+    /** Calcola un valore 0..1 con easing per un'animazione che inizia a startMs e dura durationMs. */
+    private float animaValore(long elapsed, int startMs, int durationMs) {
+        if (elapsed < startMs) return 0f;
+        float t = Math.min(1f, (float)(elapsed - startMs) / durationMs);
+        // Ease-out cubic
+        return 1f - (1f - t) * (1f - t) * (1f - t);
+    }
+
+    // ==================== Coriandoli ====================
+
+    private void avviaCoriandoli() {
+        fermaCoriandoli();
+        mostraCoriandoli = true;
+        coriandoli.clear();
+
+        int w = Math.max(getWidth(), 800);
+        for (int i = 0; i < NUM_CORIANDOLI; i++) {
+            coriandoli.add(new Coriandolo(w));
+        }
+
+        coriandoliTimer = new Timer(Constants.ANIMATION_DELAY_MS, e -> {
+            for (Coriandolo c : coriandoli) {
+                c.aggiorna();
+            }
+            repaint();
+        });
+        coriandoliTimer.start();
+    }
+
+    private void fermaCoriandoli() {
+        mostraCoriandoli = false;
+        coriandoli.clear();
+        if (coriandoliTimer != null) {
+            coriandoliTimer.stop();
+            coriandoliTimer = null;
+        }
+    }
+
+    // ==================== Rendering ====================
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g.create();
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        // Sfondo gradient
+        GradientPaint bg = new GradientPaint(0, 0, Constants.BG_DARK,
+                0, getHeight(), Constants.BG_LIGHTER);
+        g2d.setPaint(bg);
+        g2d.fillRect(0, 0, getWidth(), getHeight());
+
+        // Coriandoli (sotto i componenti Swing)
+        if (mostraCoriandoli) {
+            for (Coriandolo c : coriandoli) {
+                c.disegna(g2d);
+            }
+        }
+
+        g2d.dispose();
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+
+        // Applica alpha ai componenti figli tramite paint override
+        Graphics2D g2d = (Graphics2D) g.create();
+
+        // Disegna coriandoli sopra tutto
+        if (mostraCoriandoli) {
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            for (Coriandolo c : coriandoli) {
+                c.disegna(g2d);
+            }
+        }
+
+        g2d.dispose();
     }
 
     /** Disegna la barra XP con livelli. */
     private void disegnaXpBar(Graphics2D g2d, int w, int h) {
         int barH = 16;
         int barY = h / 2 - barH / 2 + 8;
-        int starSize = 20;
         int leftPad = 30;
         int rightPad = 30;
         int barW = w - leftPad - rightPad;
@@ -160,10 +350,16 @@ public class GameOverScreen extends JPanel {
         g2d.setColor(new Color(50, 50, 55));
         g2d.fillRoundRect(leftPad, barY, barW, barH, 8, 8);
 
-        // Progresso barra
-        float progresso = Math.min(1f, (float) xpNelLivello / xpPerLivello);
-        g2d.setColor(Constants.BTN_GREEN);
-        g2d.fillRoundRect(leftPad, barY, (int) (barW * progresso), barH, 8, 8);
+        // Progresso barra (animato)
+        int barFill = (int) (barW * xpProgressoAnimato);
+        if (barFill > 0) {
+            // Gradiente sulla barra per effetto lucido
+            GradientPaint barGrad = new GradientPaint(
+                    leftPad, barY, Constants.BTN_GREEN,
+                    leftPad, barY + barH, Constants.BTN_GREEN.darker());
+            g2d.setPaint(barGrad);
+            g2d.fillRoundRect(leftPad, barY, barFill, barH, 8, 8);
+        }
 
         // Stella livello successivo (destra)
         g2d.setColor(Constants.TEXT_MUTED);
@@ -177,24 +373,70 @@ public class GameOverScreen extends JPanel {
         g2d.setColor(Constants.TEXT_MUTED);
         g2d.drawString(xpText, leftPad + (barW - fm.stringWidth(xpText)) / 2, barY - 6);
 
-        // +XP guadagnati
-        String plusXp = "+" + xpGuadagnati;
-        g2d.setColor(Constants.BTN_GREEN);
-        g2d.setFont(new Font("SansSerif", Font.BOLD, 13));
-        fm = g2d.getFontMetrics();
-        g2d.drawString(plusXp, leftPad + (int)(barW * progresso) - fm.stringWidth(plusXp) / 2, barY - 6);
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D) g;
-        GradientPaint bg = new GradientPaint(0, 0, Constants.BG_DARK,
-                0, getHeight(), Constants.BG_LIGHTER);
-        g2d.setPaint(bg);
-        g2d.fillRect(0, 0, getWidth(), getHeight());
+        // +XP guadagnati (appare solo quando la barra ha finito di animarsi)
+        if (xpProgressoAnimato >= xpProgressoTarget && xpGuadagnati > 0) {
+            String plusXp = "+" + xpGuadagnati;
+            g2d.setColor(Constants.BTN_GREEN);
+            g2d.setFont(new Font("SansSerif", Font.BOLD, 13));
+            fm = g2d.getFontMetrics();
+            g2d.drawString(plusXp, leftPad + barFill - fm.stringWidth(plusXp) / 2, barY - 6);
+        }
     }
 
     public void addNuovaPartitaListener(ActionListener l) { btnNuovaPartita.addActionListener(l); }
     public void addMenuListener(ActionListener l) { btnMenu.addActionListener(l); }
+
+    // ==================== Classe interna Coriandolo ====================
+
+    /** Singola particella di coriandolo animata. */
+    private static class Coriandolo {
+        float x, y;
+        float velocitaY;
+        float velocitaX;
+        float rotazione;
+        float velocitaRotazione;
+        float dimensione;
+        Color colore;
+        int larghezzaSchermo;
+
+        Coriandolo(int larghezzaSchermo) {
+            this.larghezzaSchermo = larghezzaSchermo;
+            reset(true);
+        }
+
+        void reset(boolean iniziale) {
+            x = RANDOM.nextFloat() * larghezzaSchermo;
+            y = iniziale ? -RANDOM.nextFloat() * 600 : -RANDOM.nextFloat() * 40 - 10;
+            velocitaY = 1.5f + RANDOM.nextFloat() * 2.5f;
+            velocitaX = (RANDOM.nextFloat() - 0.5f) * 2f;
+            rotazione = RANDOM.nextFloat() * 360;
+            velocitaRotazione = (RANDOM.nextFloat() - 0.5f) * 8f;
+            dimensione = 4 + RANDOM.nextFloat() * 6;
+            colore = COLORI_CORIANDOLI[RANDOM.nextInt(COLORI_CORIANDOLI.length)];
+        }
+
+        void aggiorna() {
+            y += velocitaY;
+            x += velocitaX;
+            // Ondulazione laterale
+            x += Math.sin(y * 0.02) * 0.5;
+            rotazione += velocitaRotazione;
+
+            if (y > 850) {
+                reset(false);
+            }
+        }
+
+        void disegna(Graphics2D g2d) {
+            Graphics2D g = (Graphics2D) g2d.create();
+            g.translate(x, y);
+            g.rotate(Math.toRadians(rotazione));
+
+            // Rettangolino con alpha
+            g.setColor(new Color(colore.getRed(), colore.getGreen(), colore.getBlue(), 200));
+            g.fillRoundRect((int)(-dimensione / 2), (int)(-dimensione / 4),
+                    (int) dimensione, (int)(dimensione / 2), 2, 2);
+            g.dispose();
+        }
+    }
 }
